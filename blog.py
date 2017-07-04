@@ -114,6 +114,11 @@ class User(db.Model):
         if u and valid_pw(name, pw, u.pw_hash):
             return u
 
+    @classmethod
+    def content(cls, subject, content):
+        return User(parent = users_key(),
+                    subject = subject,
+                    content = content)
 
 ##### blog stuff
 
@@ -146,6 +151,34 @@ class PostPage(BlogHandler):
 
         self.render("permalink.html", post = post)
 
+class EditPost(BlogHandler):
+    def get(self, post_id):
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(key)
+
+        if not post:
+            self.error(404)
+            return
+
+        if self.user:
+            #self.render("permalink.html", post = post)
+            self.render("editpost.html", post = post)
+        else:
+            self.redirect("/login")
+    
+    def post(self, post_id):
+        u = User.content(self.username, self.password, self.email)
+        if not self.user:
+            self.redirect('/blog')
+
+        if subject and content:
+            p = Post(parent = blog_key(), subject = subject, content = content, username = username)
+            p.put()
+            self.redirect('/blog/%s' % str(p.key().id()))
+        else:
+            error = "subject and content, please!"
+            self.render("editpost.html", post = self)
+
 class NewPost(BlogHandler):
     def get(self):
         if self.user:
@@ -157,11 +190,8 @@ class NewPost(BlogHandler):
         if not self.user:
             self.redirect('/blog')
 
-        subject = self.request.get('subject')
-        content = self.request.get('content')
-
         if subject and content:
-            p = Post(parent = blog_key(), subject = subject, content = content)
+            p = Post(parent = blog_key(), subject = subject, content = content, username = username)
             p.put()
             self.redirect('/blog/%s' % str(p.key().id()))
         else:
@@ -293,6 +323,7 @@ app = webapp2.WSGIApplication([('/', MainPage),
                                ('/blog/?', BlogFront),
                                ('/blog/([0-9]+)', PostPage),
                                ('/blog/newpost', NewPost),
+                               ('/blog/editpost/([0-9]+)', EditPost),
                                ('/signup', Register),
                                ('/login', Login),
                                ('/logout', Logout),

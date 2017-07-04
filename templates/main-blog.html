@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Blog Page</title>
+		<style type="text/css">
+			h1 {text-align: center; font-size: 60px;}
+			hr {height: 5px;}
+			.blog {margin-left: 20%; margin-right: 20%;}
+			.blog-subject {font:bold; font-size: 30px;}
+
+		</style>
+	</head>
+	<body>
+			<h1><b> href= The Blog Spot<b></h1>
+			<br>
+			{% for blog in db_post %}
+				<div class="blog">
+					<div class="blog-subject">{{blog.subject}}</div>
+					<hr>
+					<pre class="blog-content">{{blog.content}}</div>
+				</div>
+				<br>
+				<br>
+			{% endfor %}			
+	</body>
+</html>		

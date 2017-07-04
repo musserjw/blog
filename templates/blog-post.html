@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Blog Post Page</title>
+		<style type="text/css">
+			.error {color: red;}
+			form {margin-left: 20%;}
+			h1 {text-align: center;}
+		</style>
+	</head>
+	<body>
+		<h1>New Post</h1>
+		<form method="post">
+			<div class="subject">
+				<h2>Subject</h2>
+				<input size="99" type="text" name="subject" value="{{subject}}">
+			</div>
+			<div class="content">
+				<h2>Blog</h2>
+				<textarea rows="30" cols="100" type="text" name= "content">{{content}}</textarea>
+			</div>
+			<br>
+			<div class="error">
+				{{error}}
+			</div>
+			<br>
+			<input type="submit">
+		</form>
+	</body>
+</html>			
